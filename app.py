@@ -1,9 +1,13 @@
-from flask import Flask, render_template, flash
+import os
+
+from flask import Flask, render_template, flash, redirect, url_for, session, request
 from flask_login import UserMixin, login_required, logout_user, LoginManager, current_user, login_user
-# from forms import RegisterForm
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+
+from forms import *
 
 app = Flask(__name__)
 
@@ -19,19 +23,32 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'index'
 
 
-
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     surname = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(65), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    profile_image = db.Column(db.String(100), default='default.jpg')
+    products = db.relationship('Product', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(20), nullable=False)
+    expire_date = db.Column(db.Date, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(100), default='default.jpg')
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 @login_manager.user_loader
@@ -44,16 +61,13 @@ def index():
     return render_template('index.html', current_user=current_user)
 
 
-from flask import redirect, url_for, session, request
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    from forms import LoginForm
+    # from forms import LoginForm
     form = LoginForm()
 
-    if current_user.is_authenticated:  # Check if the user is already logged in
-        return redirect(url_for('index'))  # Redirect to the homepage
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
 
     if form.validate_on_submit():
         email = form.email.data
@@ -61,20 +75,16 @@ def login():
 
         user = Users.query.filter_by(email=email).first()
 
-        if user and user.check_password(password):  # Use the method you defined to check the password
-            # Successful login
-            login_user(user)  # Log the user in
+        if user and user.check_password(password):
+            login_user(user)
             flash('Login successful!', 'success')
 
-            # Redirect to the page the user tried to access before logging in
             next_page = session.get('next')
             if next_page:
                 return redirect(next_page)
 
-            # If no specific page was requested, redirect to the homepage
-            return redirect(url_for('index'))
+            return redirect(url_for('userPage'))
         else:
-            # Failed login
             flash('Login failed. Please check your email and password.', 'danger')
 
     session['next'] = request.args.get('next')
@@ -82,10 +92,9 @@ def login():
     return render_template('login.html', form=form)
 
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    from forms import RegisterForm
+    # from forms import RegisterForm
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -93,14 +102,53 @@ def register():
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+
+        login_user(new_user)
+
+        return redirect(url_for('userPage'))
 
     return render_template('register.html', form=form)
 
 
-@app.route('/AddProducts')
-def AddProducts():
-    return render_template('addProducts.html')
+@app.route('/add_product', methods=['GET', 'POST'])
+@login_required
+def add_product():
+    form = AddProductForm()
+
+    if form.validate_on_submit():
+        name = form.ProductName.data
+        description = form.Description.data
+        category = form.category.data
+        expire_date = form.expire_date.data
+        price = form.price.data
+        image = form.image.data  # Uploaded image file
+
+        # Create a new Product instance
+        new_product = Product(
+            name=name,
+            description=description,
+            category=category,
+            expire_date=expire_date,
+            price=price,
+            user=current_user  # Set the relationship with the current user
+        )
+
+        # Save the product to the database
+        db.session.add(new_product)
+        db.session.commit()
+
+        # Handle image upload (if provided)
+        if form.image.data:
+            filename = secure_filename(form.image.filename)
+            image_path = os.path.join(app.root_path, 'static/product_images', filename)
+            form.image.data.save(image_path)
+            new_product.image = filename
+            db.session.commit()
+
+        flash('Product added successfully!', 'success')
+        return redirect(url_for('add_product', product_id=new_product.id))
+
+    return render_template('addProducts.html', form=form)
 
 
 @app.route('/ProductPage')
@@ -108,10 +156,21 @@ def ProductPage():
     return render_template('productPage.html')
 
 
-@app.route('/UserPage')
+@app.route('/UserPage', methods=['GET', 'POST'])
 @login_required
-def userPgae():
-    return render_template('userPage.html')
+def userPage():
+    # from forms import UpdateProfileImageForm
+    form = UpdateProfileImageForm()
+
+    if form.validate_on_submit():
+        if form.profile_image.data:
+            filename = secure_filename(form.profile_image.data.filename)
+            file_path = os.path.join(app.root_path, 'static/profile_images', filename)
+            form.profile_image.data.save(file_path)
+            current_user.profile_image = filename
+            db.session.commit()
+
+    return render_template('userPage.html', current_user=current_user, form=form)
 
 
 @app.route('/logout')

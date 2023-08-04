@@ -38,7 +38,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#!">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a
@@ -64,7 +63,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ current_user.name}}</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <button class="dropdown-item" type="button">My Profile</button>
+                        <a class="dropdown-item" href="{{ url_for('userPage') }}">My Profile</a>
+                        <a class="dropdown-item" href="{{ url_for('add_product') }}">Add Product</a>
                         <button class="dropdown-item" type="button">My Items</button>
                         <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
                     </div>

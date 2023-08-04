@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, IntegerField, FloatField
 from wtforms.validators import (
-    InputRequired, Length, Email, EqualTo
+    InputRequired, Length, Email, EqualTo, DataRequired
 )
 
 
@@ -27,3 +28,24 @@ class LoginForm(FlaskForm):
         InputRequired(message='Password is required.'),
         Length(min=8, message='Password must be at least 8 characters long.')
     ])
+
+
+class UpdateProfileImageForm(FlaskForm):
+    profile_image = FileField('Update Profile Image', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Upload')
+
+
+
+class AddProductForm(FlaskForm):
+    ProductName = StringField('Product Name', validators=[InputRequired(message='Product Name is required.'),
+                                           Length(min=2, max=80, message='Name must be between 2 and 80 characters.')])
+    Description = StringField('Description', validators=[InputRequired(message='Description is required.'),
+                                           Length(min=2, max=150, message='Description must be between 2 and 150 characters.')])
+    category = SelectField("Category", choices=[
+        ('1', 'New Arrival'),
+        ('2', 'Most Popular'),
+        ('3', 'Trending')
+    ], validators=[DataRequired()])
+    expire_date = DateField("Expire Date", format="%Y-%m-%d", validators=[DataRequired()])
+    price = FloatField("Price", validators=[DataRequired()])
+    image = FileField("Product Image")
