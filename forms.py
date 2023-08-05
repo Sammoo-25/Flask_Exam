@@ -34,7 +34,9 @@ class UpdateProfileImageForm(FlaskForm):
     profile_image = FileField('Update Profile Image', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Upload')
 
-
+class UpdateProductImageForm(FlaskForm):
+    image = FileField('Update Product Image', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Upload')
 
 class AddProductForm(FlaskForm):
     ProductName = StringField('Product Name', validators=[InputRequired(message='Product Name is required.'),

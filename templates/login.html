@@ -35,7 +35,6 @@
                                         <div class="center-wrap">
                                             <div class="section text-center">
                                                 <h4 class="mb-4 pb-3">Log In</h4>
-                                                <!-- ... (login form) ... -->
                                                 <form action="{{ url_for('login') }}" method="POST">
                                                     {{ form.csrf_token }}
                                                     <div class="form-group">
@@ -54,7 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Display flashed messages -->
+
                         <div class="mt-0">
                             {% with messages = get_flashed_messages() %}
                                 {% if messages %}

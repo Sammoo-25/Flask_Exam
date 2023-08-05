@@ -80,6 +80,12 @@
   }
 }
 
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -10807,4 +10813,8 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+}
+
+.section-bg{
+    min-height: calc(100% - 176px);
 }

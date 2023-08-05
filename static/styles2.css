@@ -789,10 +789,10 @@ input[type='checkbox']:focus {
   color: #fff;
   background: #aaa;
 }
-/*.tm-product-img-edit {
+.tm-product-img-edit {
   max-width: 100%;
   position: relative;
-}*/
+}
 .tm-product-img-edit i {
   position: absolute;
 }
@@ -995,3 +995,9 @@ input[type='checkbox']:focus {
    width:32%;
    margin-left: 440px;
 }
+.self-img{
+    width: 375.5px;
+    height: 240px;
+    object-fit: cover;
+}
+

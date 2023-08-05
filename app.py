@@ -58,7 +58,9 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    return render_template('index.html', current_user=current_user)
+    products = Product.query.order_by(Product.id.desc()).all()
+
+    return render_template('index.html', products=products)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -121,39 +123,42 @@ def add_product():
         category = form.category.data
         expire_date = form.expire_date.data
         price = form.price.data
-        image = form.image.data  # Uploaded image file
-
-        # Create a new Product instance
+        image = form.image.data
         new_product = Product(
             name=name,
             description=description,
             category=category,
             expire_date=expire_date,
             price=price,
-            user=current_user  # Set the relationship with the current user
+            user=current_user
         )
 
-        # Save the product to the database
-        db.session.add(new_product)
-        db.session.commit()
-
-        # Handle image upload (if provided)
-        if form.image.data:
-            filename = secure_filename(form.image.filename)
+        if image:
+            filename = secure_filename(image.filename)
             image_path = os.path.join(app.root_path, 'static/product_images', filename)
-            form.image.data.save(image_path)
+            image.save(image_path)
             new_product.image = filename
             db.session.commit()
 
+        db.session.add(new_product)
+        db.session.commit()
+
         flash('Product added successfully!', 'success')
-        return redirect(url_for('add_product', product_id=new_product.id))
+
+        return redirect(url_for('myitems'))
 
     return render_template('addProducts.html', form=form)
 
 
-@app.route('/ProductPage')
-def ProductPage():
-    return render_template('productPage.html')
+@app.route('/ProductPage/<int:id>', methods=['POST', 'GET'])
+@login_required
+def ProductPage(id):
+    product = Product.query.filter_by(id=id).first()
+    if product:
+        return render_template('productPage.html', products=[product])
+    else:
+        flash('Product not found', 'danger')
+        return redirect(url_for('myitems'))
 
 
 @app.route('/UserPage', methods=['GET', 'POST'])
@@ -171,6 +176,15 @@ def userPage():
             db.session.commit()
 
     return render_template('userPage.html', current_user=current_user, form=form)
+
+
+@app.route('/myitems', methods=['GET', 'POST'])
+@login_required
+def myitems():
+    prod_form = AddProductForm()
+    products = Product.query.filter_by(user_id=current_user.id).order_by(Product.id.desc()).all()
+
+    return render_template('myitems.html', prod_form=prod_form, products=products)
 
 
 @app.route('/logout')
