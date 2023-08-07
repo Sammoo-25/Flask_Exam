@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, FloatField
 from wtforms.validators import (
     InputRequired, Length, Email, EqualTo, DataRequired, Regexp
 )
@@ -60,3 +60,13 @@ class AddProductForm(FlaskForm):
     expire_date = DateField("Expire Date", format="%Y-%m-%d", validators=[DataRequired()])
     price = FloatField("Price", validators=[DataRequired()])
     image = FileField("Product Image")
+
+
+class GetRating(FlaskForm):
+    rating = SelectField("Rate this product:", choices=[
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5')
+    ], validators=[DataRequired()])

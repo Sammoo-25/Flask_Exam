@@ -4,6 +4,7 @@ from flask import Flask, render_template, flash, redirect, url_for, session, req
 from flask_login import UserMixin, login_required, logout_user, LoginManager, current_user, login_user
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
@@ -50,6 +51,8 @@ class Product(db.Model):
     expire_date = db.Column(db.Date, nullable=False)
     price = db.Column(db.Float, nullable=False)
     image = db.Column(db.String(100), default='default.jpg')
+    rating = db.Column(db.Integer, default=0)
+    rating_count = db.Column(db.Integer, default=0)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
@@ -153,15 +156,29 @@ def add_product():
 
 
 @app.route('/ProductPage/<int:id>', methods=['POST', 'GET'])
-@login_required
 def ProductPage(id):
-    product = Product.query.filter_by(id=id).first()
+    Session = sessionmaker(bind=db.engine)
+    session = Session()
+
+    product = session.query(Product).filter_by(id=id).first()
+    form = GetRating()
+
+    # if form.validate_on_submit():
+    print(product.rating)
+    print(form.rating.data)
+    # Fix the logic of this route
     if product:
-        return render_template('productPage.html', products=[product])
+        if form.validate_on_submit():
+            product.rating += form.rating.data
+            product.rating_count += 1
+            db.session.add(product.rating)
+            db.session.commit()
+        return render_template('productPage.html', products=[product], form=form)
     else:
         flash('Product not found', 'danger')
         return redirect(url_for('myitems'))
-
+    # Fix the logic of this route
+# return render_template('productPage.html', products=[product], form=form)
 
 @app.route('/UserPage', methods=['GET', 'POST'])
 @login_required

@@ -117,7 +117,8 @@
                     </div>
                     <div class="row tm-edit-product-row">
                         <div class="col-xl-6 col-lg-6 col-md-12">
-                            <form action="{{ url_for('add_product') }}" class="tm-edit-product-form" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url_for('add_product') }}" class="tm-edit-product-form" method="POST"
+                                  enctype="multipart/form-data">
                                 {{ form.csrf_token }}
                                 <div class="form-group mb-3">
                                     {{ form.ProductName.label }}
@@ -125,7 +126,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form.Description.label }}
-                                    {{ form.Description(class="form-control", rows="3") }}
+                                    {{ form.Description(class="form-control", rows="3", placeholder="Enter description here") }}
                                 </div>
                                 <div class="form-group mb-3">
                                     {{ form.category.label }}
@@ -148,7 +149,7 @@
                                            value="UPLOAD PRODUCT IMAGE"
                                            onclick="document.getElementById('fileInput').click();"/>
                                     <div class="uploadPreview tm-product-img-dummy mx-auto mt-3">
-                                         <img src="{{ url_for('static', filename='product_images/default2.png') }}"
+                                        <img src="{{ url_for('static', filename='product_images/default2.png') }}"
                                              alt="Default Image" class="self-img" id="self-id">
                                     </div>
                                 </div>
@@ -181,6 +182,7 @@
         var imagePreview = document.getElementById('self-id');
         imagePreview.src = URL.createObjectURL(e.target.files[0]);
     });
+
 </script>
 </body>
 </html>

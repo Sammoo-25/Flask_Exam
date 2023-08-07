@@ -359,4 +359,19 @@ section {
     width: 70%;
 }
 
+.form-stars {
+    display: inline-block;
+    font-size: 24px;
+}
 
+.form-stars .bi-star {
+    color: #ffc000; /* Default star color */
+    background-color: #efefef;
+    cursor: pointer;
+    border: none;
+
+}
+
+.form-stars .selected {
+    color: orange; /* Selected star color */
+}

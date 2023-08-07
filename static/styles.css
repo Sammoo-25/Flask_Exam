@@ -10821,6 +10821,6 @@ textarea.form-control-lg {
 
 .img__size{
 height: 150px;
-width: 223px;
+width: auto;
 object-fit: cover;
 }
