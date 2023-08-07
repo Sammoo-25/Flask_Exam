@@ -29,7 +29,10 @@ class Users(db.Model, UserMixin):
     surname = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(65), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    profile_image = db.Column(db.String(100), default='default.jpg')
+    profile_image = db.Column(db.String(100))
+    gender = db.Column(db.String(10), nullable=False)
+    phone_number = db.Column(db.String(50), nullable=False)
+
     products = db.relationship('Product', backref='user', lazy=True)
 
     def set_password(self, password):
@@ -65,7 +68,6 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # from forms import LoginForm
     form = LoginForm()
 
     if current_user.is_authenticated:
@@ -96,11 +98,11 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # from forms import RegisterForm
     form = RegisterForm()
 
     if form.validate_on_submit():
-        new_user = Users(name=form.name.data, surname=form.surname.data, email=form.email.data)
+        new_user = Users(name=form.name.data, surname=form.surname.data,
+                         email=form.email.data, gender=form.gender.data, phone_number=form.phone_number.data)
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()

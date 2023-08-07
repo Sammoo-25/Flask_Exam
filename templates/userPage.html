@@ -96,9 +96,15 @@
                     <img src="{{ url_for('static', filename='profile_images/' + current_user.profile_image) }}"
                          alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                     {% else %}
-                    <img src="{{ url_for('static', filename='profile_images/default.jpg') }}" alt="avatar"
+                    {% if current_user.gender == 'M' %}
+                    <img src="{{ url_for('static', filename='profile_images/male-default.jpg') }}" alt="avatar"
+                         class="rounded-circle img-fluid" style="width: 150px;">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='profile_images/female-default1.jpg') }}" alt="avatar"
                          class="rounded-circle img-fluid" style="width: 150px;">
                     {% endif %}
+                    {% endif %}
+
                     <h5 class="my-3">{{ current_user.name }} {{ current_user.surname }}</h5>
                     <form action="{{ url_for('userPage') }}" method="POST" enctype="multipart/form-data">
                         {{ form.csrf_token }}
@@ -137,6 +143,28 @@
                         </div>
                         <div class="col-sm-9">
                             <p class="text-muted mb-0">{{ current_user.email }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Gender</p>
+                        </div>
+                        <div class="col-sm-9">
+                            {% if current_user.gender == 'M' %}
+                            <p class="text-muted mb-0">Male</p>
+                            {% else %}
+                            <p class="text-muted mb-0">Female</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone Number</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ current_user.phone_number }}</p>
                         </div>
                     </div>
                     <hr>

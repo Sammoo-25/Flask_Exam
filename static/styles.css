@@ -10818,3 +10818,9 @@ textarea.form-control-lg {
 .section-bg{
     min-height: calc(100% - 176px);
 }
+
+.img__size{
+height: 150px;
+width: 223px;
+object-fit: cover;
+}

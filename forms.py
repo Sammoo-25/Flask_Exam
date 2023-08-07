@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, IntegerField, FloatField
 from wtforms.validators import (
-    InputRequired, Length, Email, EqualTo, DataRequired
+    InputRequired, Length, Email, EqualTo, DataRequired, Regexp
 )
 
 
@@ -13,6 +13,11 @@ class RegisterForm(FlaskForm):
                                                  Length(min=2, max=50,
                                                         message='Surname must be between 2 and 50 characters.')])
     email = StringField('Email', validators=[Email()])
+
+    gender = StringField('Gender', validators=[
+        InputRequired(message='Gender is required.'),
+        Regexp('^M|F$', message='Gender must be either "M" or "F".')])
+    phone_number = StringField('Phone Number', validators=[InputRequired(message='Phone Number is required.')])
 
     password = PasswordField('Password', validators=[
         InputRequired(message='Password is required'),
@@ -34,15 +39,19 @@ class UpdateProfileImageForm(FlaskForm):
     profile_image = FileField('Update Profile Image', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Upload')
 
+
 class UpdateProductImageForm(FlaskForm):
     image = FileField('Update Product Image', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Upload')
 
+
 class AddProductForm(FlaskForm):
     ProductName = StringField('Product Name', validators=[InputRequired(message='Product Name is required.'),
-                                           Length(min=2, max=80, message='Name must be between 2 and 80 characters.')])
+                                                          Length(min=2, max=80,
+                                                                 message='Name must be between 2 and 80 characters.')])
     Description = StringField('Description', validators=[InputRequired(message='Description is required.'),
-                                           Length(min=2, max=150, message='Description must be between 2 and 150 characters.')])
+                                                         Length(min=2, max=150,
+                                                                message='Description must be between 2 and 150 characters.')])
     category = SelectField("Category", choices=[
         ('1', 'New Arrival'),
         ('2', 'Most Popular'),
