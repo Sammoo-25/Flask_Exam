@@ -110,13 +110,14 @@
                                 <div class="_p-features">
                                     <span>{{ product.description }}</span>
                                 </div>
-                                <ul class="spe_ul"></ul>
                                 <div class="form-group mb-3">
                                     <label for="rate" class="form-label">Rate</label>
                                     <div class="form-stars" id="rate-stars">
                                         <form action="{{ url_for('ProductPage', id=product.id) }}" method="POST">
                                             {% for i in range(1, 6) %}
-                                                <button type="submit" class="bi bi-star {% if product.rating >= i %}selected{% endif %}" name="rating" value="{{ i }}" aria-label="{{ i }}"></button>
+                                            <button type="submit"
+                                                    class="bi bi-star {% if product.rating >= i %}selected{% endif %}"
+                                                    name="rating" value="{{ i }}" aria-label="{{ i }}"></button>
                                             {% endfor %}
                                         </form>
                                     </div>
@@ -162,40 +163,39 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const starButtons = document.querySelectorAll('.form-stars button');
-    const starContainer = document.getElementById('rate-stars');
-    let selectedRating = 0;
+    document.addEventListener('DOMContentLoaded', function() {
+        const starButtons = document.querySelectorAll('.form-stars button');
+        const starContainer = document.getElementById('rate-stars');
+        let selectedRating = 0;
 
-    starButtons.forEach(starButton => {
-        starButton.addEventListener('mouseenter', function() {
-            const value = parseInt(starButton.getAttribute('data-value'));
-            paintStars(value);
-        });
-
-        starButton.addEventListener('mouseleave', function() {
-            paintStars(selectedRating);
-        });
-
-        starButton.addEventListener('click', function() {
-            selectedRating = parseInt(starButton.getAttribute('data-value'));
-            paintStars(selectedRating);
-            console.log(`Selected Rating: ${selectedRating}`);
-        });
-    });
-
-    function paintStars(value) {
         starButtons.forEach(starButton => {
-            const starValue = parseInt(starButton.getAttribute('data-value'));
-            if (starValue <= value) {
-                starButton.classList.add('selected');
-            } else {
-                starButton.classList.remove('selected');
-            }
-        });
-    }
-});
+            starButton.addEventListener('mouseenter', function() {
+                const value = parseInt(starButton.getAttribute('data-value'));
+                paintStars(value);
+            });
 
+            starButton.addEventListener('mouseleave', function() {
+                paintStars(selectedRating);
+            });
+
+            starButton.addEventListener('click', function() {
+                selectedRating = parseInt(starButton.getAttribute('data-value'));
+                paintStars(selectedRating);
+                console.log(`Selected Rating: ${selectedRating}`);
+            });
+        });
+
+        function paintStars(value) {
+            starButtons.forEach(starButton => {
+                const starValue = parseInt(starButton.getAttribute('data-value'));
+                if (starValue <= value) {
+                    starButton.classList.add('selected');
+                } else {
+                    starButton.classList.remove('selected');
+                }
+            });
+        }
+    });
 
 
 </script>
