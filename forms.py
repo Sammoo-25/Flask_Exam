@@ -40,9 +40,9 @@ class UpdateProfileImageForm(FlaskForm):
     submit = SubmitField('Upload')
 
 
-class UpdateProductImageForm(FlaskForm):
-    image = FileField('Update Product Image', validators=[FileAllowed(['jpg', 'png'])])
-    submit = SubmitField('Upload')
+# class UpdateProductImageForm(FlaskForm):
+#     image = FileField('Update Product Image', validators=[FileAllowed(['jpg', 'png'])])
+#     submit = SubmitField('Upload')
 
 
 class AddProductForm(FlaskForm):
@@ -61,12 +61,3 @@ class AddProductForm(FlaskForm):
     price = FloatField("Price", validators=[DataRequired()])
     image = FileField("Product Image")
 
-
-class GetRating(FlaskForm):
-    rating = SelectField("Rate this product:", choices=[
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5')
-    ], validators=[DataRequired()])

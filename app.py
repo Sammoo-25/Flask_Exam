@@ -4,7 +4,6 @@ from flask import Flask, render_template, flash, redirect, url_for, session, req
 from flask_login import UserMixin, login_required, logout_user, LoginManager, current_user, login_user
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 

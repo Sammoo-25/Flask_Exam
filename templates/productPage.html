@@ -31,7 +31,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Start Bootstrap</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}"><b>Yo</b>Advertisments</a>
         <button
                 class="navbar-toggler"
                 type="button"
@@ -125,6 +125,33 @@
                                 <div class="final-rating">
                                     <p>Final Rating: <span>{{ final_rating }}</span></p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="part d-flex justify-content-center">
+                        <div class="product-owner-info">
+                            <div class="owner-profile">
+                                {% if product.user.profile_image %}
+                                <img src="{{ url_for('static', filename='profile_images/' + product.user.profile_image) }}"
+                                     alt="Owner Profile Image" class="rounded-circle img-fluid">
+                                {% else %}
+                                {% if current_user.gender == 'M' %}
+                                <img src="{{ url_for('static', filename='profile_images/male-default.jpg') }}"
+                                     alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='profile_images/female-default1.jpg') }}"
+                                     alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;">
+                                {% endif %}
+                                {% endif %}
+                            </div>
+
+                            <div class="owner-details">
+                                <p>Name: {{ product.user.name }}</p>
+                                <p>Surname: {{ product.user.surname }}</p>
+                                <p>Phone Number: {{ product.user.phone_number }}</p>
                             </div>
                         </div>
                     </div>
