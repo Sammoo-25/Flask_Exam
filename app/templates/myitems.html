@@ -57,7 +57,7 @@
                         <li>
                             <hr class="dropdown-divider"/>
                         </li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('pop_item') }}">Popular Items</a></li>
                         <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                     </ul>
                 </li>
@@ -106,6 +106,9 @@
                             </div>
                             <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                                 <h5 class="mb-0">${{ product.price }}</h5>
+                            </div>
+                             <div class="final-rating">
+                                <p>Final Rating: <span>{{ product.final_rating }}</span></p>
                             </div>
                             <a href="{{ url_for('ProductPage', id=product.id) }}" type="button"
                                class="btn btn-primary col-md-3 col-lg-2 col-xl-2">View Details</a>

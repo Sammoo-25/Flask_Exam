@@ -32,5 +32,6 @@ class Product(db.Model):
     image = db.Column(db.String(100), default='default.jpg')
     rating = db.Column(db.Integer, default=0)
     rating_count = db.Column(db.Integer, default=0)
+    final_rating = db.Column(db.Float, nullable=False, default=0.0)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

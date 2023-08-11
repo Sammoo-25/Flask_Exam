@@ -33,7 +33,7 @@ def add_product():
 
         if image:
             filename = secure_filename(image.filename)
-            image_path = os.path.join(app.root_path, 'app/static/product_images', filename)
+            image_path = os.path.join(app.root_path, 'static/product_images', filename)
             image.save(image_path)
             new_product.image = filename
             db.session.commit()
@@ -51,17 +51,23 @@ def add_product():
 @app.route('/ProductPage/<int:id>', methods=['POST', 'GET'])
 def ProductPage(id):
     product = Product.query.get_or_404(id)
-    final_rating = 0
     if request.method == 'POST':
         if not current_user.is_anonymous and current_user.id != product.user_id and current_user.is_authenticated:
             rating = int(request.form.get('rating', 0))
             if 1 <= rating <= 5:
                 product.rating = (product.rating + rating)
-                final_rating = round(product.rating / (product.rating_count + 1), 1)
+                product.final_rating = round(product.rating / (product.rating_count + 1), 1)
                 product.rating_count += 1
                 db.session.commit()
         else:
             flash('You cannot rate your own product.', 'danger')
             return redirect(url_for('login'))
 
-    return render_template('productPage.html', products=[product], final_rating=final_rating)
+    return render_template('productPage.html', products=[product], final_rating=product.final_rating)
+
+
+@app.route('/pop_item', methods=['GET', 'POST'])
+def pop_item():
+    products = Product.query.filter(Product.final_rating >= 4).all()
+
+    return render_template('popular_items.html', products=products)

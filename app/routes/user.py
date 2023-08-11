@@ -19,7 +19,7 @@ def userPage():
     if form.validate_on_submit():
         if form.profile_image.data:
             filename = secure_filename(form.profile_image.data.filename)
-            file_path = os.path.join(app.root_path, 'app/static/profile_images', filename)
+            file_path = os.path.join(app.root_path, 'static/profile_images', filename)
             form.profile_image.data.save(file_path)
             current_user.profile_image = filename
             db.session.commit()
