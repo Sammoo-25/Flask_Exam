@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: app_container
+#    networks:
+#      - app_network
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres-db
+    environment:
+      SQLALCHEMY_DATABASE_URI: 'postgresql://postgres:Samvel357552@postgres-db:5434/advertisements_db'
+      FLASK_ENV: 'production'
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'Samvel357552'
+      POSTGRES_DB: 'advertisements_db'
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:
+
+#networks:
+#  app_network:
