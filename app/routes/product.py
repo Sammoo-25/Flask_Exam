@@ -71,3 +71,10 @@ def pop_item():
     products = Product.query.filter(Product.final_rating >= 4).all()
 
     return render_template('popular_items.html', products=products)
+
+
+@app.route('/all_items', methods=['GET', 'POST'])
+def all_items():
+    products = Product.query.all()
+
+    return render_template('all_items.html', products=products)

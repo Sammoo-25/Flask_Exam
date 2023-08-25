@@ -21,7 +21,7 @@ class RegisterForm(FlaskForm):
 
     password = PasswordField('Password', validators=[
         InputRequired(message='Password is required'),
-        Length(min=6, message='Password must be at least 6 characters')])
+        Length(min=7, message='Password must be at least 6 characters')])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[InputRequired(message='Confirm Password is required.'),
                                                  EqualTo('password', message='Passwords do not match.')])
@@ -31,7 +31,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     password = PasswordField('Password', validators=[
         InputRequired(message='Password is required.'),
-        Length(min=8, message='Password must be at least 8 characters long.')
+        Length(min=7, message='Password must be at least 8 characters long.')
     ])
 
 

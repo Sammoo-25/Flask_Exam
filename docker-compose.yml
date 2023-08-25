@@ -6,8 +6,6 @@ services:
       context: .
       dockerfile: app/Dockerfile
     container_name: app_container
-#    networks:
-#      - app_network
     ports:
       - "5000:5000"
     depends_on:
@@ -30,6 +28,3 @@ services:
 
 volumes:
   postgres_data:
-
-#networks:
-#  app_network:

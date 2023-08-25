@@ -358,3 +358,9 @@ section {
 .user__inf__card {
   margin-right: 15px;
 }
+
+.alert.alert-success {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}

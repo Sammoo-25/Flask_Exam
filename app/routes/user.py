@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template
+from flask import render_template, session
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -11,10 +11,12 @@ from ..forms import UpdateProfileImageForm, AddProductForm
 from .. import app, db
 
 
-@app.route('/UserPage', methods=['GET', 'POST'])
+@app.route('/userPage', methods=['GET', 'POST'])
 @login_required
 def userPage():
     form = UpdateProfileImageForm()
+
+    success_message = session.pop('login_success', None)
 
     if form.validate_on_submit():
         if form.profile_image.data:
@@ -24,7 +26,8 @@ def userPage():
             current_user.profile_image = filename
             db.session.commit()
 
-    return render_template('userPage.html', current_user=current_user, form=form)
+    return render_template('userPage.html', current_user=current_user, form=form, success_message=success_message)
+
 
 
 @app.route('/myitems', methods=['GET', 'POST'])
