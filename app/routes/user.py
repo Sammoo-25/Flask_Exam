@@ -29,7 +29,6 @@ def userPage():
     return render_template('userPage.html', current_user=current_user, form=form, success_message=success_message)
 
 
-
 @app.route('/myitems', methods=['GET', 'POST'])
 @login_required
 def myitems():

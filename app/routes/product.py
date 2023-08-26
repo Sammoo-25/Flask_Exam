@@ -1,6 +1,6 @@
 import os
 
-from flask import flash, redirect, url_for, render_template, request
+from flask import flash, redirect, url_for, render_template, request, session
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
@@ -51,6 +51,7 @@ def add_product():
 @app.route('/ProductPage/<int:id>', methods=['POST', 'GET'])
 def ProductPage(id):
     product = Product.query.get_or_404(id)
+    danger_message = session.pop('login_success', None)
     if request.method == 'POST':
         if not current_user.is_anonymous and current_user.id != product.user_id and current_user.is_authenticated:
             rating = int(request.form.get('rating', 0))
@@ -78,3 +79,12 @@ def all_items():
     products = Product.query.all()
 
     return render_template('all_items.html', products=products)
+
+
+@app.route('/new_arrivals')
+def new_arrivals():
+    from datetime import datetime, timedelta
+    last_week = datetime.now() - timedelta(days=3)
+    products = Product.query.filter(Product.expire_date >= last_week).all()
+
+    return render_template('new_arrivals.html', products=products)

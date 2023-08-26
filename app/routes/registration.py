@@ -22,7 +22,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user)
-            # session['login_success'] = 'Login successful!'
+            session['login_success'] = 'Login successful!'
 
             next_page = session.get('next')
             if next_page:
