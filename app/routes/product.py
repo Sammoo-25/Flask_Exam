@@ -51,15 +51,19 @@ def add_product():
 @app.route('/ProductPage/<int:id>', methods=['POST', 'GET'])
 def ProductPage(id):
     product = Product.query.get_or_404(id)
-    danger_message = session.pop('login_success', None)
     if request.method == 'POST':
         if not current_user.is_anonymous and current_user.id != product.user_id and current_user.is_authenticated:
-            rating = int(request.form.get('rating', 0))
-            if 1 <= rating <= 5:
-                product.rating = (product.rating + rating)
-                product.final_rating = round(product.rating / (product.rating_count + 1), 1)
-                product.rating_count += 1
-                db.session.commit()
+            if product.rating == 0:
+                rating = int(request.form.get('rating', 0))
+                if 1 <= rating <= 5:
+                    product.rating = (product.rating + rating)
+                    product.final_rating = round(product.rating / (product.rating_count + 1), 1)
+                    product.rating_count += 1
+                    db.session.commit()
+                else:
+                    flash('Rating must be between 1 and 5.', 'danger')
+            else:
+                flash('You have already rated this product.', 'danger')
         else:
             flash('You cannot rate your own product.', 'danger')
             return redirect(url_for('login'))
@@ -84,7 +88,7 @@ def all_items():
 @app.route('/new_arrivals')
 def new_arrivals():
     from datetime import datetime, timedelta
-    last_week = datetime.now() - timedelta(days=3)
-    products = Product.query.filter(Product.expire_date >= last_week).all()
+    last_day = datetime.now() - timedelta(days=3)
+    products = Product.query.filter(Product.expire_date >= last_day).all()
 
     return render_template('new_arrivals.html', products=products)

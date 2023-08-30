@@ -40,11 +40,6 @@ class UpdateProfileImageForm(FlaskForm):
     submit = SubmitField('Upload')
 
 
-# class UpdateProductImageForm(FlaskForm):
-#     image = FileField('Update Product Image', validators=[FileAllowed(['jpg', 'png'])])
-#     submit = SubmitField('Upload')
-
-
 class AddProductForm(FlaskForm):
     ProductName = StringField('Product Name', validators=[InputRequired(message='Product Name is required.'),
                                                           Length(min=2, max=80,
@@ -60,4 +55,3 @@ class AddProductForm(FlaskForm):
     expire_date = DateField("Expire Date", format="%Y-%m-%d", validators=[DataRequired()])
     price = FloatField("Price", validators=[DataRequired()])
     image = FileField("Product Image")
-
